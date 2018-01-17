@@ -20,7 +20,7 @@
     </Row>
     <Row class="image-list" :gutter="16">
       <Col :lg="6" :sm="12" class="vm-margin" v-for="item in dataShow" :key="item.id">
-        <VmCard :editable="true" :title="item.title" :img="item.img" :desc="item.desc" :detailUrl="item.detailUrl" :editUrl="item.editUrl" @delete-ok=" deleteOk(item) "></VmCard>
+        <VmCard :message="parentMsg" v-on:listen="listenFromChild" :editable="true" :title="item.title" :img="item.img" :desc="item.desc" :detailUrl="item.detailUrl" :editUrl="item.editUrl" @delete-ok=" deleteOk(item) "></VmCard>
       </Col>
     </Row>
   </div>
@@ -56,6 +56,7 @@
     },
     data: function () {
       return {
+        parentMsg:'Hello',
         keyword: '', // keyword for search
         dataShow: [], // data for showing
         showNum: 8, // number of item per page
@@ -63,6 +64,9 @@
       }
     },
     methods: {
+      listenFromChild:function(data){
+        console.log(data);
+      },
       updateDataShow: function () {
         let startPage = (this.currentPage - 1) * this.showNum
         let endPage = startPage + this.showNum

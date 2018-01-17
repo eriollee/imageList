@@ -1,20 +1,17 @@
 <template>
 	<div class="wrapper">
-    <h2>example1 基本例子 无限制</h2>
+    <h2>{{message}}</h2><Button v-on:click="sendMsg"> 向父组件传值</Button>
 				<div class="test test1">
 					<vueCropper
-						ref="cropper"
-						:img="option.img"
-						:outputSize="option.size"
-						:outputType="option.outputType"
-						:info="true"
-						:full="option.full"
-						:canMove="option.canMove"
-						:canMoveBox="option.canMoveBox"
-						:fixedBox="option.fixedBox"
-						:original="option.original"
-						@realTime="realTime"
-						@imgLoad="imgLoad"
+						ref="cropper2"
+						:img="example2.img"
+						:outputSize="example2.size"
+						:outputType="example2.outputType"
+						:info="example2.info"
+						:canScale="example2.canScale"
+						:autoCrop="example2.autoCrop"
+						:autoCropWidth="example2.autoCropWidth"
+						:autoCropHeight="example2.autoCropHeight"
 					></vueCropper>
 				</div>
 	</div>
@@ -25,6 +22,7 @@ import vueCropper from './vue-cropper'
 import codes from './code'
 
 export default {
+  props:["message"],
   data: function () {
     return {
 			model: false,
@@ -88,6 +86,9 @@ export default {
     }
   },
 	methods: {
+		sendMsg(){
+			this.$emit("listen","this is fromchild");
+		},
 		changeImg () {
 			this.option.img = this.lists[~~(Math.random() * this.lists.length)].img
 		},
