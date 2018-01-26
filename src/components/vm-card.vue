@@ -98,7 +98,8 @@ export default {
 		sendMsg(){
 			// this.$emit("listen","this is fromchild");
 			//console.log(this.$refs.cropper2.cropOffsertX);
-		    //console.log(this.$refs.cropper2.cropX);
+			//console.log(this.$refs.cropper2.cropX);
+			//console.log(~~(this.$refs.cropper2.h/2-((this.$refs.cropper2.trueHeight*this.$refs.cropper2.originalScale))/2-this.$refs.cropper2.cropOfforiCropY));
 			//console.log(this.$refs.cropper2.cropY);
 			//console.log(this.$refs.cropper2.moveX);
 			//console.log(this.$refs.cropper2.moveY);
@@ -119,26 +120,38 @@ export default {
 			let originalScale = this.$refs.cropper2.originalScale;
 			let scale = this.$refs.cropper2.scale;
 			let dX = 0;
-			let oriPointW = 0 ;//原始坐标
-			let actPointW = 0 ;//原图比实际偏移坐标
-			let actCropW =  this.$refs.cropper2.cropOffsertX;//原坐标比实际偏移坐标
-			//console.log(actCropW);
+			let dY = 0;
+			let oriPointW = 0 ;//原始X坐标
+			let oriPointH = 0 ;//原始Y坐标
+			let actPointW = 0 ;//原图比实际偏移X坐标
+			let actPointH = 0 ;//原图比实际偏移Y坐标
+			
+			//console.log(actCropH);
 
 			
 			oriPointW = ~~((this.$refs.cropper2.oriCropX/2)-(~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.originalScale))/2);
+			oriPointH = ~~(this.$refs.cropper2.h/2-((this.$refs.cropper2.trueHeight*this.$refs.cropper2.originalScale))/2-this.$refs.cropper2.cropOffsertY);
+			let actCropW =  this.$refs.cropper2.cropOffsertX;//原坐标比实际偏移X坐标
+			let actCropH =  this.$refs.cropper2.cropOffsertY-this.$refs.cropper2.cropOfforiCropY;//原坐标比实际偏移Y坐标
+			//console.log(actCropH);
 			//console.log(oriPointW);
 			
 			// console.log(scale);
 			// console.log(originalScale);
 			dX =   (zoomX-originX)/2;
+			dY =   (zoomY-originY)/2;
 			// console.log(dX);
 			actPointW = oriPointW+ dX;
+			actPointH = dY-oriPointH;
+			//console.log(actPointH);
 			if(scale>originalScale){
 				console.log(111);
-				console.log((actPointW+actCropW)/scale);
+				// console.log(~~((actPointW+actCropW)/scale))); 距离左上角原点实际坐标
+				console.log(~~((actPointH+actCropH)/scale));
 			}else{
 				console.log(222);
-				console.log((actCropW-actPointW)/scale);
+				console.log(~~((actPointH+actCropH)/scale));
+				// console.log((actCropW-actPointW)/scale);
 			}
 			
 			 

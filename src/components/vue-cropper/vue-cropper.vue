@@ -139,7 +139,8 @@ export default {
 			originalX:0,
 			originalY:0,
 			oriCropX:0,
-			oriCropY:0
+			oriCropY:0,
+			cropOfforiCropY:0
     }
   },
 	props: {
@@ -1020,8 +1021,9 @@ export default {
 			this.cropW = w
 			this.cropH = h
 			// 居中走一走
-			this.cropOffsertX = (this.w - w) / 2
-			this.cropOffsertY = (this.h - h) / 2
+			this.cropOffsertX = (this.w - w) / 2;
+			this.cropOffsertY = (this.h - h) / 2;
+			this.cropOfforiCropY = this.cropOffsertY;
 		
 		},
 		// 重置函数， 恢复组件置初始状态
