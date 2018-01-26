@@ -21,6 +21,7 @@
 <script>
 import vueCropper from './vue-cropper'
 import codes from './code'
+import XLSX from 'xlsx';
 
 export default {
   name:"VmCard",
@@ -88,10 +89,376 @@ export default {
 				autoCropHeight: 200,
 				fixedBox: true
 			},
-			downImg: '#'
+			downImg: '#',
+			// 设置面板标题
+        settingPanelTitle:"",
+        col:1,
+        // 是否编辑
+        isEdit:true,
+        // 表头数据
+        headerData: {
+          "offerData":{
+            name:"项目名称",
+            spec:"规格",
+            unit:"单位",
+            count:"数量",
+            unitPrice:"单价",
+            total:"金额",
+            cardNum:"卡数",
+            comments:"备注"
+          },
+          "offerData1":{
+            name:"项目名称1",
+            spec:"规格1",
+            unit:"单位1",
+            count:"数量1",
+            unitPrice:"单价1",
+            total:"金额1",
+            cardNum:"卡数1",
+            comments:"备注1"
+          }
+        },
+        // 表格数据
+        allData:{
+          "offerData":[
+            {
+              name:"柜体1",
+              spec:"sasd",
+              unit:"sadad",
+              count:"5",
+              unitPrice:"145",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            },
+            {
+              name:"柜体2",
+              spec:"sasd",
+              unit:"sadad",
+              count:"10",
+              unitPrice:"522",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            },
+            {
+              name:"柜体3",
+              spec:"sasd",
+              unit:"sadad",
+              count:"15",
+              unitPrice:"142",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            },
+            {
+              name:"柜体4",
+              spec:"sasd",
+              unit:"sadad",
+              count:"20",
+              unitPrice:"22",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            },
+            {
+              name:"柜体5",
+              spec:"sasd",
+              unit:"sadad",
+              count:"25",
+              unitPrice:"222",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            },
+            {
+              name:"柜体6",
+              spec:"sasd",
+              unit:"sadad",
+              count:"12",
+              unitPrice:"322",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            }
+          ],
+          "offerData1":[
+            {
+              name:"边框1",
+              spec:"sasd",
+              unit:"sadad",
+              count:"12",
+              unitPrice:"14522",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            },
+            {
+              name:"边框2",
+              spec:"sasd",
+              unit:"sadad",
+              count:"12",
+              unitPrice:"14522",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            },
+            {
+              name:"边框3",
+              spec:"sasd",
+              unit:"sadad",
+              count:"12",
+              unitPrice:"14522",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            },
+            {
+              name:"边框4",
+              spec:"sasd",
+              unit:"sadad",
+              count:"12",
+              unitPrice:"14522",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            },
+            {
+              name:"边框5",
+              spec:"sasd",
+              unit:"sadad",
+              count:"12",
+              unitPrice:"14522",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            },
+            {
+              name:"边框6",
+              spec:"sasd",
+              unit:"sadad",
+              count:"12",
+              unitPrice:"14522",
+              total:"",
+              cardNum:5,
+              comments:"大师大师多撒好低"
+            }
+          ]
+        },
+        //页头部分
+        pageHead:{
+          "offerData":[
+            {
+              name:"订单号：",
+              isEdit:false
+            },
+            {
+              name:"客户名称：",
+              isEdit:false
+            },
+            {
+              name:"销售日期：",
+              isEdit:false
+            },
+            {
+              name:"联系人：",
+              isEdit:false
+            },
+            {
+              name:"联系地址：",
+              isEdit:false
+            }
+          ],
+          "offerData1":[
+            {
+              name:"订单号1：",
+              isEdit:false
+            },
+            {
+              name:"客户名称1：",
+              isEdit:false
+            },
+            {
+              name:"销售日期1：",
+              isEdit:false
+            },
+            {
+              name:"联系人1：",
+              isEdit:false
+            },
+            {
+              name:"联系地址1：",
+              isEdit:false
+            }
+          ]
+        },
+        // 页头部分内容
+        pageHeadContent:{
+          "offerData":[
+            {
+              name:"1231312313"
+            },
+            {
+              name:"zoe"
+            },
+            {
+              name:"2017-10-21"
+
+            },
+            {
+              name:"joe"
+
+            },
+            {
+              name:"beijibng"
+            }
+          ],
+          "offerData1":[
+            {
+              name:"2231312313"
+            },
+            {
+              name:"zoe1"
+            },
+            {
+              name:"2017-10-21"
+
+            },
+            {
+              name:"joe11"
+
+            },
+            {
+              name:"beijibng111"
+            }
+          ]
+        },
+        options: {
+          'offerData':{
+            value: 'offerData',
+            label: '报价明细单'
+          }, 
+          'offerData1':{
+            value: 'offerData1',
+            label: '报价明细单1'
+          }
+        },
+        value: 'offerData', //选择的表格
+        outputData:[], // 导出的数据
+        outFile: '' // 导出文件el
     }
   },
 	methods: {
+		excelExport(){
+			this.downloadFile(this.outputData);
+			//saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),"sheetjs.xlsx");
+		},
+		
+		// 导出功能
+      downloadFile: function (rs) { // 点击导出按钮
+        //拼接导出的数据
+        //1.拼接标题
+        rs.push({title:this.settingPanelTitle});
+        //2.拼接表头内容
+        let headContent={};
+        //页头项
+        let pHead=this.pageHead[this.value];
+        //页头项对应的内容
+        let pHeadContent=this.pageHeadContent[this.value];
+
+        for(let i in pHead){   
+          headContent[i]=pHead[i].name+""+pHeadContent[i].name;
+        }
+        // console.log(headContent);
+        rs.push(headContent);
+        //3.拼接表头标题
+        
+        rs.push(this.headerData[this.value]);
+
+        //4.拼接表内容
+        rs.push(...this.allData[this.value]);
+        //5.拼接表尾
+        // rs.push({title:"合计",value:this.settingData[this.value].totalPrice});
+        // console.log(rs);
+        this.downloadExl(rs, this.settingPanelTitle)
+      },
+      downloadExl: function (json, downName, type) {  // 导出到excel
+        let tmpdata = [] // 用来保存转换好的json
+        let maxLen=0; //最长的一行
+        json.map((v, i) => {
+          if(maxLen<Object.keys(v).length){
+            maxLen=Object.keys(v).length;
+          }
+          return Object.keys(v).map((k, j) => {  //取出键对应的值
+
+            return Object.assign({}, { //拼接输出的sheet
+              v: v[k],
+              position: (j > 25 ? this.getCharCol(j) : String.fromCharCode(65 + j)) + (i + 1)
+            })}
+          )
+        }).reduce((prev, next) =>  prev.concat(next)).forEach(function (v) {
+          tmpdata[v.position] = { //转换输出json
+            v: v.v
+          }
+        })
+        let outputPos = Object.keys(tmpdata)  // 设置区域,比如表格从A1到D10
+        // console.log(outputPos);
+        
+        // 转化最长的行所对应的区域码
+        maxLen=this.getCharCol(maxLen);
+        // console.log(maxLen+outputPos[outputPos.length-1].slice(1));
+        let tmpWB = {
+          SheetNames: ['mySheet'], // 保存的表标题
+          Sheets: {
+            'mySheet': Object.assign({},
+              tmpdata, // 内容
+              {
+                '!ref': outputPos[0] + ':' + (maxLen+outputPos[outputPos.length-1].slice(1)) // 设置填充区域
+              })
+          }
+        }
+        // let tmpDown = new Blob([this.s2ab(XLSX.write(tmpWB,
+        //   {bookType: (type === undefined ? 'xlsx' : type), bookSST: false, type: 'binary'} // 这里的数据是用来定义导出的格式类型
+        // ))], {
+        //   type: ''
+		// })  // 创建二进制对象写入转换好的字节流
+		 saveAs(new Blob([this.s2ab(XLSX.write(tmpWB,
+          {bookType: (type === undefined ? 'xlsx' : type), bookSST: false, type: 'binary'} // 这里的数据是用来定义导出的格式类型
+        ))], {type: "application/octet-stream"}), "1111" + ".xlsx")
+        // var href = URL.createObjectURL(tmpDown)  // 创建对象超链接
+        // this.outFile.download = downName + '.xlsx'  // 下载名称
+        // this.outFile.href = href  // 绑定a标签
+        // this.outFile.click()  // 模拟点击实现下载
+        // setTimeout(function () {  // 延时释放
+        //   URL.revokeObjectURL(tmpDown) // 用URL.revokeObjectURL()来释放这个object URL
+        // }, 100)
+      },
+      // 转2进制
+      s2ab(s){
+        if(typeof ArrayBuffer !== 'undefined'){
+          let buf =new ArrayBuffer(s.length);
+          let view =new Uint8Array(buf);
+          for(var i=0;i!=s.length;++i) view[i] =s.charCodeAt(i) & 0xFF;  
+          return buf;      
+        }else{
+          let buf= new Array(s.length);
+          for(var i=0;i!=s.length;++i) buf[i] =s.charCodeAt(i) & 0xFF;
+          return buf;
+        } 
+      },
+      // 将指定的自然数转换为26进制表示。映射关系：[0-25] -> [A-Z]。
+      getCharCol(n) { 
+        let s = ''
+        let m = 0
+        while (n > 0) {
+          m = n % 26 + 1
+          s = String.fromCharCode(m + 64) + s
+          n = (n - m) / 26
+        }
+        return s
+      },
+
+
 		getUser(){
                 console.log("11111");
         },
@@ -170,6 +537,7 @@ export default {
 				this.a[1]=~~((actCropW-actPointW)/scale);
 			}
 			
+			this.excelExport();
 			 
 			
 			// console.log((this.$refs.cropper2.cropW/2)-(~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.scale))/2);

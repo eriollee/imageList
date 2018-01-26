@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "echarts": "^3.7.1",
+    "file-saver": "^1.3.3",
     "iview": "^2.0.0-rc.17",
     "style-loader": "^0.18.2",
     "vm-editor": "^0.1.2",
     "vue": "^2.3.3",
-    "vue-router": "^2.3.1"
+    "vue-router": "^2.3.1",
+    "xlsx": "^0.11.18"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
