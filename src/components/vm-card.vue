@@ -144,14 +144,30 @@ export default {
 			actPointW = oriPointW+ dX;
 			actPointH = dY-oriPointH;
 			//console.log(actPointH);
-			if(scale>originalScale){
+			let oriWidth = ~~(this.$refs.cropper2.cropW/scale);
+			let oriHeight= ~~(this.$refs.cropper2.cropH/scale);
+			if(scale>=originalScale){
 				console.log(111);
-				// console.log(~~((actPointW+actCropW)/scale))); 距离左上角原点实际坐标
+				console.log(~~((actPointW+actCropW)/scale));
 				console.log(~~((actPointH+actCropH)/scale));
+				this.a[0]=~~((actPointW+actCropW)/scale);
+				this.a[1]=~~((actPointH+actCropH)/scale);
+				console.log(this.a[0]+","+this.a[1]);
+				this.b[0]=this.a[0]+oriWidth;
+				this.b[1]=this.a[1];
+				console.log(this.b[0]+","+this.b[1]);
+				this.c[0]=this.a[0]
+				this.c[1]=this.a[1]+oriHeight;
+				console.log(this.c[0]+","+this.c[1]);
+				this.d[0]=this.a[0]+oriWidth;
+				this.d[1]=this.a[1]+oriHeight;
+				console.log(this.d[0]+","+this.d[1]);
 			}else{
 				console.log(222);
 				console.log(~~((actPointH+actCropH)/scale));
-				// console.log((actCropW-actPointW)/scale);
+				this.a[0]=~~((actPointH+actCropH)/scale);
+				console.log((actCropW-actPointW)/scale);
+				this.a[1]=~~((actCropW-actPointW)/scale);
 			}
 			
 			 
