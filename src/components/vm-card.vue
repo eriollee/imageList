@@ -12,6 +12,7 @@
 						:autoCrop="example2.autoCrop"
 						:autoCropWidth="example2.autoCropWidth"
 						:autoCropHeight="example2.autoCropHeight"
+						:canMove = "false"
 					></vueCropper>
 				</div>
 	</div>
@@ -22,12 +23,17 @@ import vueCropper from './vue-cropper'
 import codes from './code'
 
 export default {
+  name:"VmCard",
   props:["message"],
   data: function () {
     return {
 			model: false,
+			a:[],//截图左上角距离图片左上角的坐标
+			b:[],//截图右上角距离图片左上角的坐标
+			c:[],//截图左下角距离图片左上角的坐标
+			d:[],//截图右下角距离图片左上角的坐标
 			modelSrc: '',
-		  crap: false,
+		    crap: false,
 			previews: {},
 			lists: [
 				// {
@@ -86,8 +92,80 @@ export default {
     }
   },
 	methods: {
+		getUser(){
+                console.log("11111");
+        },
 		sendMsg(){
-			this.$emit("listen","this is fromchild");
+			// this.$emit("listen","this is fromchild");
+			//console.log(this.$refs.cropper2.cropOffsertX);
+		    //console.log(this.$refs.cropper2.cropX);
+			//console.log(this.$refs.cropper2.cropY);
+			//console.log(this.$refs.cropper2.moveX);
+			//console.log(this.$refs.cropper2.moveY);
+		 	//console.log(this.$refs.cropper2.cropOffsertX);
+			//console.log(this.$refs.cropper2.cropOffsertY);
+			//   console.log(this.$refs.cropper2.cropW);
+			//   console.log(this.$refs.cropper2.cropH);
+			//   console.log(~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.scale));
+			//   console.log(~~(this.$refs.cropper2.trueHeight*this.$refs.cropper2.scale));
+			//获取左上角坐标
+			let originX = ~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.originalScale);
+			let originY = ~~(this.$refs.cropper2.trueHeight*this.$refs.cropper2.originalScale);
+			
+			let zoomX = ~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.scale);
+			let zoomY = ~~(this.$refs.cropper2.trueHeight*this.$refs.cropper2.scale);
+			
+			let scaled = this.$refs.cropper2.scaled;
+			let originalScale = this.$refs.cropper2.originalScale;
+			let scale = this.$refs.cropper2.scale;
+			let dX = 0;
+			let oriPointW = 0 ;//原始坐标
+			let actPointW = 0 ;//原图比实际偏移坐标
+			let actCropW =  this.$refs.cropper2.cropOffsertX;//原坐标比实际偏移坐标
+			//console.log(actCropW);
+
+			
+			oriPointW = ~~((this.$refs.cropper2.oriCropX/2)-(~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.originalScale))/2);
+			//console.log(oriPointW);
+			
+			// console.log(scale);
+			// console.log(originalScale);
+			dX =   (zoomX-originX)/2;
+			// console.log(dX);
+			actPointW = oriPointW+ dX;
+			if(scale>originalScale){
+				console.log(111);
+				console.log((actPointW+actCropW)/scale);
+			}else{
+				console.log(222);
+				console.log((actCropW-actPointW)/scale);
+			}
+			
+			 
+			
+			// console.log((this.$refs.cropper2.cropW/2)-(~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.scale))/2);
+			// this.a[0] = ~~(((this.$refs.cropper2.cropW/2)-(~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.scale))/2)/this.$refs.cropper2.scale);
+			// this.a[1] = ~~(((this.$refs.cropper2.cropH/2)-(~~(this.$refs.cropper2.trueHeight*this.$refs.cropper2.scale))/2)/this.$refs.cropper2.scale);
+			// this.b[0]=a[0]+this.$refs.cropper2.cropW;
+			// this.b[1]=a[1];
+			// this.c[0]=a[0]
+			// this.c[1]=a[1]+this.$refs.cropper2.cropH;
+			// this.d[0]=a[0]+this.$refs.cropper2.cropW;
+			// this.d[1]=a[0]+this.$refs.cropper2.cropH;
+			// console.log("a[0]:"+this.a[0]+"a[1]:"+this.a[1]);
+			//console.log(a[0]);
+			// console.log((this.$refs.cropper2.cropW/2)-(~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.scale))/2);
+			 //this.a[0]=(this.$refs.cropper2.cropW/2)-(~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.scale))/2;
+			// console.log(this.a[0]+"======"+this.a[1]);
+			//  console.log(this.$refs.cropper2.imgW);
+			//  console.log(this.$refs.cropper2.imgH);
+			// console.log(this.$refs.cropper2.scale);
+			// console.log(this.$refs.cropper2.trueWidth);
+			// console.log(this.$refs.cropper2.trueHeight);
+			// console.log(this.$refs.cropper2.$refs.cropperImg.x); 与左上角原点x坐标
+			// console.log(this.$refs.cropper2.$refs.cropperImg.y); 与左上角原点y坐标
+			// console.log(this.$refs.cropper2.$refs.cropper);
+			// console.log(this.$refs.cropper2.$refs.cropper);
 		},
 		changeImg () {
 			this.option.img = this.lists[~~(Math.random() * this.lists.length)].img
@@ -199,7 +277,7 @@ export default {
 			}
 			// 转化为base64
 			// reader.readAsDataURL(file)
-			// 转化为blob
+			// 转化为blobimgLoad
 			reader.readAsArrayBuffer(file)
 		},
 		imgLoad (msg) {
@@ -217,6 +295,7 @@ export default {
 		list.forEach((val, index) => {
 		  hljs.highlightBlock(val)
 		})
+		
 	}
 }
 </script>

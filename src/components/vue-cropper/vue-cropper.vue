@@ -129,8 +129,17 @@ export default {
 			coe: 0.2,
 			// 是否正在多次缩放
 			scaling: false,
+			scaled: false,
 			scalingSet: '',
-			coeStatus: ''
+			coeStatus: '',
+			//图片在画布中的宽高
+			imgW:0,
+			imgH:0,
+			originalScale:1,
+			originalX:0,
+			originalY:0,
+			oriCropX:0,
+			oriCropY:0
     }
   },
 	props: {
@@ -264,6 +273,8 @@ export default {
 			img.onload = () => {
 				let width = img.width
 				let height = img.height
+				// console.log(width);
+				// console.log(height);
 				let ctx = canvas.getContext('2d')
 				ctx.save()
 				exif.getData(img, () => {
@@ -284,6 +295,7 @@ export default {
 					}
 					if (rotate === 0) {
 						this.imgs = this.img
+						
 						return
 					}
 					switch (rotate) {
@@ -331,6 +343,7 @@ export default {
 			}
 			img.crossOrigin = '*'
 			img.src = this.img
+			
 		},
 		// 当按下鼠标键
 		startMove (e) {
@@ -435,7 +448,9 @@ export default {
 				return false
 			}
 			var nowX = e.clientX ? e.clientX : e.touches[0].clientX
-      var nowY = e.clientY ? e.clientY : e.touches[0].clientY
+	  var nowY = e.clientY ? e.clientY : e.touches[0].clientY
+			// console.log(nowX);
+			 //   console.log(nowY);
 			this.$nextTick(() => {
 				this.x = ~~(nowX - this.moveX)
 				this.y = ~~(nowY - this.moveY)
@@ -463,6 +478,7 @@ export default {
 		},
 		// 改变大小函数
 		changeSize (e) {
+			console.log("changeSize");
 			e.preventDefault()
 			var change = e.deltaY || e.wheelDelta
 			// 根据图片本身大小 决定每次改变大小的系数, 图片越大系数越小
@@ -485,11 +501,13 @@ export default {
 					this.coe = this.coe += 0.01
 				}, 50)
 			}
-			this.scaling = true
+			this.scaling = true;
+			this.scaled = true;
 		},
 
 		// 修改图片大小函数
 		changeScale (num) {
+			console.log("changeScale");
 			num = num || 1
 			var coe = 20
 			coe = coe / this.trueWidth > coe / this.trueHeight ? coe / this.trueHeight : coe / this.trueWidth
@@ -501,7 +519,9 @@ export default {
 			e.preventDefault()
 			// 移动生成大小
 			var nowX = e.clientX ? e.clientX : e.touches ? e.touches[0].clientX : 0
-      var nowY = e.clientY ? e.clientY : e.touches ? e.touches[0].clientY : 0
+	  		var nowY = e.clientY ? e.clientY : e.touches ? e.touches[0].clientY : 0
+			  console.log(nowX);
+			  console.log(nowY);
 			this.$nextTick(() => {
 				var fw = ~~(nowX - this.cropX)
 				var fh = ~~(nowY - this.cropY)
@@ -542,6 +562,7 @@ export default {
 		// 改变截图框大小
 		changeCropSize (e, w, h, typeW, typeH) {
 			e.preventDefault()
+			console.log("changeCropSize");
 			window.addEventListener('mousemove', this.changeCropNow)
 			window.addEventListener('mouseup', this.changeCropEnd)
 			window.addEventListener('touchmove', this.changeCropNow)
@@ -566,6 +587,7 @@ export default {
 		// 正在改变
 		changeCropNow (e) {
 			e.preventDefault()
+			console.log("changeCropNow");
 			var nowX = e.clientX ? e.clientX : e.touches ? e.touches[0].clientX : 0
       var nowY = e.clientY ? e.clientY : e.touches ? e.touches[0].clientY : 0
 			this.$nextTick(() => {
@@ -643,6 +665,7 @@ export default {
 
 		// 创建完成
 		endCrop () {
+			console.log("endCrop");
 			if (this.cropW === 0 && this.cropH === 0) {
 				this.cropping = false
 			}
@@ -670,6 +693,7 @@ export default {
 		},
 		// 截图移动
 		cropMove (e) {
+			console.log("cropMove");
 			e.preventDefault()
 			if (!this.canMoveBox) {
         this.crop = false
@@ -687,7 +711,8 @@ export default {
 		moveCrop (e) {
 			e.preventDefault()
 			var nowX = e.clientX ? e.clientX : e.touches[0].clientX
-      var nowY = e.clientY ? e.clientY : e.touches[0].clientY
+	  var nowY = e.clientY ? e.clientY : e.touches[0].clientY
+			  //console.log(nowX);
 			this.$nextTick(() => {
 				var fw = ~~(nowX - this.cropX)
 				var fh = ~~(nowY - this.cropY)
@@ -731,6 +756,8 @@ export default {
 					let height = this.cropH
 					let imgW = trueWidth * this.scale
 					let imgH = trueHeight * this.scale
+					this.imgW = ~~(imgW);
+					this.imgH = ~~(imgH);
 					// 图片x轴偏移
 					let dx = (this.x - cropOffsertX) + this.trueWidth * (1 - this.scale) / 2
 					// 图片y轴偏移
@@ -815,6 +842,8 @@ export default {
 				} else {
 					let width = trueWidth * this.scale
 					let height = trueHeight * this.scale
+					this.imgW = ~~(width);
+					this.imgH = ~~(height);
 					let ctx = canvas.getContext('2d')
 					ctx.save()
     			switch (rotate) {
@@ -901,6 +930,7 @@ export default {
 		},
 		// reload 图片布局函数
 		reload () {
+			console.log("reload");
 			let img = new Image
 			img.onload = () => {
 				// 读取图片的信息原始信息， 解析是否需要旋转
@@ -908,7 +938,6 @@ export default {
 				// 得到外层容器的宽度高度
 				this.w =  ~~(window.getComputedStyle(this.$refs.cropper).width.replace('px', ''))
 				this.h =  ~~(window.getComputedStyle(this.$refs.cropper).height.replace('px', ''))
-
 				// 存入图片真实高度
 				this.trueWidth = img.width
 				this.trueHeight = img.height
@@ -918,6 +947,9 @@ export default {
 					if (this.trueWidth > this.w) {
 						// 如果图片宽度大于容器宽度
 						this.scale = this.w / this.trueWidth
+						// console.log(this.w);
+						// console.log(this.trueWidth);
+						// console.log(this.scale);
 					}
 
 					if (this.trueHeight * this.scale > this.h) {
@@ -926,14 +958,20 @@ export default {
 				} else {
 					this.scale = 1
 				}
-
+				this.originalScale = this.scale;
+				// this.originalX = this.trueWidth*this.scale;
+				// this.originalY = this.trueHeight*this.scale;
 				this.$nextTick(() => {
+					
 					this.x = -(this.trueWidth - this.trueWidth * this.scale) / 2 + (this.w - this.trueWidth * this.scale) / 2
 					this.y = -(this.trueHeight - this.trueHeight * this.scale) / 2 + (this.h - this.trueHeight * this.scale) / 2
+					// console.log(this.x);
+					// console.log(this.y);
 					this.loading = false
 					// 获取是否开启了自动截图
 					if (this.autoCrop) {
 						this.goAutoCrop()
+						
 					}
 					// 图片加载成功的回调
 					this.$emit('imgLoad', 'success')
@@ -946,6 +984,7 @@ export default {
 		},
 		// 自动截图函数
 		goAutoCrop () {
+			console.log("goAutoCrop");
 			this.cropping = true
 			// 截图框默认大小
 			// 如果为0 那么计算容器大小 默认为80%
@@ -955,8 +994,11 @@ export default {
 				w = this.w * 0.8
 				h = this.h * 0.8
 			}
+
+			
 			w = w > this.w ? this.w : w
 			h = h > this.h ? this.h : h
+
 			if (this.fixed) {
 				h = w / this.fixedNumber[0] * this.fixedNumber[1]
 			}
@@ -965,8 +1007,13 @@ export default {
 				h = this.h
 				w = h / this.fixedNumber[1] * this.fixedNumber[0]
 			}
+			this.oriCropX = w;
+			this.oriCropY = h;
 			this.changeCrop(w, h)
 		},
+
+		 
+
 		// 手动改变截图框大小函数
 		changeCrop (w, h) {
 			// 判断是否大于容器
@@ -975,6 +1022,7 @@ export default {
 			// 居中走一走
 			this.cropOffsertX = (this.w - w) / 2
 			this.cropOffsertY = (this.h - h) / 2
+		
 		},
 		// 重置函数， 恢复组件置初始状态
 		refresh () {
@@ -1025,6 +1073,7 @@ export default {
 		  }
 		 })
 		}
+			 
 	}
 }
 </script>

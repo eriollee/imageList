@@ -2,7 +2,7 @@
   <div class="vm-image-list">
     <Row class="image-list-heading vm-panel">
       <div class="panel-heading">
-        {{ title }}    <Button  type="ghost" @click="showInfo">截取信息</Button>
+        {{ title }}    <Button  type="ghost" v-on:click="handleEdit" >截取信息</Button>
       </div>
       <Row type="flex" align="middle" justify="space-between" class="panel-body">
        <div class="search-bar">
@@ -20,7 +20,7 @@
     </Row>
     <Row class="image-list" :gutter="16">
       <Col :lg="6" :sm="12" class="vm-margin" v-for="item in dataShow" :key="item.id">
-        <VmCard :message="parentMsg" v-on:listen="listenFromChild" :editable="true" :title="item.title" :img="item.img" :desc="item.desc" :detailUrl="item.detailUrl" :editUrl="item.editUrl" @delete-ok=" deleteOk(item) "></VmCard>
+        <VmCard ref="VmCard"  :message="parentMsg" v-on:listen="listenFromChild" :editable="true" :title="item.title" :img="item.img" :desc="item.desc" :detailUrl="item.detailUrl" :editUrl="item.editUrl" @delete-ok=" deleteOk(item) "></VmCard>
       </Col>
     </Row>
   </div>
@@ -31,7 +31,7 @@
   export default {
     name: 'VmImageList',
     components: {
-      VmCard
+      VmCard:VmCard
     },
     props: {
       title: {
@@ -64,6 +64,12 @@
       }
     },
     methods: {
+      handleEdit() {//获取图片信息
+           this.$refs.VmCard[0].sendMsg();
+          //  for (let i=0;i<this.showNum;i++) {
+          //     this.$refs.VmCard[i].sendMsg();
+          //   }
+      },
       listenFromChild:function(data){
         console.log(data);
       },
