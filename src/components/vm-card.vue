@@ -622,8 +622,16 @@ export default {
 				console.log((actCropW-actPointW)/scale);
 				this.a[1]=~~((actCropW-actPointW)/scale);
 			}
-			
-			this.excelExport();
+			this.coodinateData.aX=this.a[0];
+			this.coodinateData.aY=this.a[1];
+			this.coodinateData.bX=this.b[0];
+			this.coodinateData.bY=this.b[1];
+			this.coodinateData.cX=this.c[0];
+			this.coodinateData.cY=this.c[1];
+			this.coodinateData.dX=this.d[0];
+			this.coodinateData.dY=this.d[1];
+			return this.coodinateData;
+			// this.excelExport();
 			 
 			
 			// console.log((this.$refs.cropper2.cropW/2)-(~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.scale))/2);
