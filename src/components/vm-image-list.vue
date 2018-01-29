@@ -60,7 +60,21 @@
         keyword: '', // keyword for search
         dataShow: [], // data for showing
         showNum: 8, // number of item per page
-        currentPage: 1
+        currentPage: 1,
+        imgInfo:[
+          {
+            id:"imageName",
+            aX:0,
+            aY:0,
+            bX:0,
+            bY:0,
+            cX:0,
+            cY:0,
+            dX:0,
+            dY:0,
+            aX:0
+          }
+        ]
       }
     },
     methods: {

@@ -21,7 +21,8 @@
 <script>
 import vueCropper from './vue-cropper'
 import codes from './code'
-import XLSX from 'xlsx';
+import XLSX from 'xlsx'
+import Vue from 'vue'
 
 export default {
   name:"VmCard",
@@ -33,6 +34,17 @@ export default {
 			b:[],//截图右上角距离图片左上角的坐标
 			c:[],//截图左下角距离图片左上角的坐标
 			d:[],//截图右下角距离图片左上角的坐标
+			coodinateData: {
+				imageName:'imageName',
+				aX:0,
+				aY:0,
+				bX:0,
+				bY:0,
+				cX:0,
+				cY:0,
+				dX:0,
+				aY:0
+			},
 			modelSrc: '',
 		    crap: false,
 			previews: {},
@@ -116,6 +128,17 @@ export default {
             total:"金额1",
             cardNum:"卡数1",
             comments:"备注1"
+					},
+          "offerData2":{
+            name:"ImageName",
+						aX:'AX',
+						aY:'AY',
+						bX:'BX',
+						bY:'BY',
+						cX:'CX',
+						cY:'CY',
+						dX:'DX',
+						dY:'DY'
           }
         },
         // 表格数据
@@ -243,6 +266,30 @@ export default {
               cardNum:5,
               comments:"大师大师多撒好低"
             }
+					]
+					,
+          "offerData2":[
+						{
+            name:"Image1",
+						aX:0,
+						aY:0,
+						bX:0,
+						bY:0,
+						cX:0,
+						cY:0,
+						dX:0,
+						dY:0
+						},	{
+            name:"Image2",
+						aX:1,
+						aY:1,
+						bX:1,
+						bY:1,
+						cX:1,
+						cY:1,
+						dX:1,
+						dY:1
+						}
           ]
         },
         //页头部分
@@ -288,6 +335,27 @@ export default {
             },
             {
               name:"联系地址1：",
+              isEdit:false
+            }
+          ], "offerData2":[
+            {
+              name:"ImageName",
+              isEdit:false
+            },
+            {
+              name:"CoordinateA",
+              isEdit:false
+            },
+            {
+              name:"CoordinateB",
+              isEdit:false
+            },
+            {
+              name:"CoordinateC",
+              isEdit:false
+            },
+            {
+              name:"CoordinateD",
               isEdit:false
             }
           ]
@@ -343,7 +411,7 @@ export default {
             label: '报价明细单1'
           }
         },
-        value: 'offerData', //选择的表格
+        value: 'offerData2', //选择的表格
         outputData:[], // 导出的数据
         outFile: '' // 导出文件el
     }
@@ -358,28 +426,44 @@ export default {
       downloadFile: function (rs) { // 点击导出按钮
         //拼接导出的数据
         //1.拼接标题
-        rs.push({title:this.settingPanelTitle});
+        // rs.push({title:this.settingPanelTitle});
         //2.拼接表头内容
-        let headContent={};
+        // let headContent={};
         //页头项
-        let pHead=this.pageHead[this.value];
+        // let pHead=this.pageHead[this.value];
         //页头项对应的内容
-        let pHeadContent=this.pageHeadContent[this.value];
+        // let pHeadContent=this.pageHeadContent[this.value];
 
-        for(let i in pHead){   
-          headContent[i]=pHead[i].name+""+pHeadContent[i].name;
-        }
+        // for(let i in pHead){   
+				// 	console.log(pHeadContent[i].name);
+        //   headContent[i]=pHead[i].name+""+pHeadContent[i].name;
+        // }
         // console.log(headContent);
-        rs.push(headContent);
+        // rs.push(headContent);
         //3.拼接表头标题
         
         rs.push(this.headerData[this.value]);
-
+				this.coodinateData.aX=this.a[0];
+				this.coodinateData.aY=this.a[1];
+				this.coodinateData.dX=this.d[0];
+				this.coodinateData.dY=this.d[1];
+				this.allData[this.value].aX = this.coodinateData.aX;
+				this.allData[this.value].aY = this.coodinateData.aY;
+			 console.log(this.allData[this.value][0].name);
+				  Vue.set(this.allData[this.value][0], 'name', 'aaaaa');
+				// Vue.set(this.allData[this.value][1], this.allData[this.value][1], 'aaaaaa');
+				//Vue.set(this.allData[this.value], 1, 'bbbbbbb');
+				// Vue.set(this.allData[this.value], 0, a);
         //4.拼接表内容
-        rs.push(...this.allData[this.value]);
+				rs.push(...this.allData[this.value]);
+				 
+				console.log(1111);
+				
+				console.log(this.allData[this.value]);
+				 console.log(2222);
         //5.拼接表尾
         // rs.push({title:"合计",value:this.settingData[this.value].totalPrice});
-        // console.log(rs);
+         console.log(rs);
         this.downloadExl(rs, this.settingPanelTitle)
       },
       downloadExl: function (json, downName, type) {  // 导出到excel
@@ -388,9 +472,9 @@ export default {
         json.map((v, i) => {
           if(maxLen<Object.keys(v).length){
             maxLen=Object.keys(v).length;
-          }
-          return Object.keys(v).map((k, j) => {  //取出键对应的值
-
+					}
+				
+					return Object.keys(v).map((k, j) => {   //取出键对应的值
             return Object.assign({}, { //拼接输出的sheet
               v: v[k],
               position: (j > 25 ? this.getCharCol(j) : String.fromCharCode(65 + j)) + (i + 1)
@@ -401,11 +485,13 @@ export default {
             v: v.v
           }
         })
+
         let outputPos = Object.keys(tmpdata)  // 设置区域,比如表格从A1到D10
-        // console.log(outputPos);
-        
+         //console.log(outputPos);
+       // console.log(tmpdata);
         // 转化最长的行所对应的区域码
-        maxLen=this.getCharCol(maxLen);
+				maxLen=this.getCharCol(maxLen);
+		//		console.log(maxLen)
         // console.log(maxLen+outputPos[outputPos.length-1].slice(1));
         let tmpWB = {
           SheetNames: ['mySheet'], // 保存的表标题
