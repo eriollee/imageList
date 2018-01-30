@@ -104,7 +104,7 @@
     },
     methods: {
       handleEdit() {//获取图片信息
-          //  this.$refs.VmCard[0].sendMsg();
+          //this.$refs.VmCard[0].sendMsg();
           //  console.log( this.$refs.VmCard[0].sendMsg())
            this.imgInfo.splice(0,this.imgInfo.length);//清空数组 ;//初始化数组
           

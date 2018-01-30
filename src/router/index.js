@@ -23,8 +23,8 @@ export default new Router({
       children: [
         {
           path: '/',
-          name: 'Dashboard',
-          component: Dashboard
+          name: 'ImageList',
+          component: ImageList
         },
         {
           path: 'widget',

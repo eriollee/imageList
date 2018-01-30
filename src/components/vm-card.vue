@@ -581,11 +581,12 @@ export default {
 			
 			//console.log(actCropH);
 
-			
+			console.log("cropOffsertY=="+this.$refs.cropper2.cropOffsertY)
 			oriPointW = ~~((this.$refs.cropper2.oriCropX/2)-(~~(this.$refs.cropper2.trueWidth*this.$refs.cropper2.originalScale))/2);
-			oriPointH = ~~(this.$refs.cropper2.h/2-((this.$refs.cropper2.trueHeight*this.$refs.cropper2.originalScale))/2-this.$refs.cropper2.cropOffsertY);
+			oriPointH = -(~~(this.$refs.cropper2.h/2-(this.$refs.cropper2.trueHeight*this.$refs.cropper2.originalScale)/2-this.$refs.cropper2.cropOffsertY));
+			console.log("oriPointH=="+oriPointH)
 			let actCropW =  this.$refs.cropper2.cropOffsertX;//原坐标比实际偏移X坐标
-			let actCropH =  this.$refs.cropper2.cropOffsertY-this.$refs.cropper2.cropOfforiCropY;//原坐标比实际偏移Y坐标
+			let actCropH =  oriPointH;//原坐标比实际偏移Y坐标
 			//console.log(actCropH);
 			//console.log(oriPointW);
 			
@@ -593,18 +594,18 @@ export default {
 			// console.log(originalScale);
 			dX =   (zoomX-originX)/2;
 			dY =   (zoomY-originY)/2;
-			// console.log(dX);
+			  console.log("dY=="+dY);
 			actPointW = oriPointW+ dX;
-			actPointH = dY-oriPointH;
+			actPointH = dY;
 			//console.log(actPointH);
-			let oriWidth = ~~(this.$refs.cropper2.cropW/scale);
-			let oriHeight= ~~(this.$refs.cropper2.cropH/scale);
-			if(scale>=originalScale){
+			let oriWidth = ~~(this.$refs.cropper2.cropW/scale);//截图宽度
+			let oriHeight= ~~(this.$refs.cropper2.cropH/scale);//截图长度
+			// if(scale>=originalScale){
 				console.log(111);
 				console.log(~~((actPointW+actCropW)/scale));
-				console.log(~~((actPointH+actCropH)/scale));
+				console.log(~~((actCropH)/scale));
 				this.a[0]=~~((actPointW+actCropW)/scale);
-				this.a[1]=~~((actPointH+actCropH)/scale);
+				this.a[1]=~~((actCropH+actPointH)/scale);
 				console.log(this.a[0]+","+this.a[1]);
 				this.b[0]=this.a[0]+oriWidth;
 				this.b[1]=this.a[1];
@@ -615,13 +616,13 @@ export default {
 				this.d[0]=this.a[0]+oriWidth;
 				this.d[1]=this.a[1]+oriHeight;
 				console.log(this.d[0]+","+this.d[1]);
-			}else{
-				console.log(222);
-				console.log(~~((actPointH+actCropH)/scale));
-				this.a[0]=~~((actPointH+actCropH)/scale);
-				console.log((actCropW-actPointW)/scale);
-				this.a[1]=~~((actCropW-actPointW)/scale);
-			}
+			// }else{
+			// 	console.log(222);
+			// 	console.log((actCropW+actPointW)/scale);
+			// 	this.a[0]=~~((actCropW+actPointW)/scale);
+			// 	console.log(~~((actPointH+actCropH)/scale));
+			// 	this.a[1]=~~((actPointH+actCropH)/scale);
+			// }
 			this.coodinateData.aX=this.a[0];
 			this.coodinateData.aY=this.a[1];
 			this.coodinateData.bX=this.b[0];
