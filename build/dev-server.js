@@ -12,6 +12,7 @@ var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
 
+
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
@@ -21,6 +22,30 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+
+//加载json开始
+// var imgData = require('../data.json');
+// var dataImageList = imgData.dataImageList;
+// var apiRoute = express.Router();
+// apiRoute.get('/dataImageList',function(req, res){
+//   res.json({
+//    errno:0,//错误码
+//    data: dataImageList//具体数据
+//   })
+//  });
+//  app.use('/api',apiRoute);
+// 加载json结束
+
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Credentials','true');
+  next();
+};
+
+app.use(allowCrossDomain);
+
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {

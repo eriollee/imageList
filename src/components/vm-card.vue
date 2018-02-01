@@ -1,10 +1,11 @@
 <template>
 	<div class="wrapper">
-    <h2>{{message}}</h2><Button v-on:click="sendMsg"> 向父组件传值</Button>
+    <h2>{{title}}</h2>
+		<!-- <Button v-on:click="sendMsg"> 向父组件传值</Button> -->
 				<div class="test test1">
 					<vueCropper
 						ref="cropper2"
-						:img="example2.img"
+						:img="img"
 						:outputSize="example2.size"
 						:outputType="example2.outputType"
 						:info="example2.info"
@@ -26,7 +27,20 @@ import Vue from 'vue'
 
 export default {
   name:"VmCard",
-  props:["message"],
+	props:{ 
+		message:"",
+		img: {
+        type: String,
+        default: require('@/assets/img/img-1.jpg')
+		},
+		title: {
+        type: String,
+        default: 'Title'
+    },
+		
+	},
+	
+
   data: function () {
     return {
 			model: false,

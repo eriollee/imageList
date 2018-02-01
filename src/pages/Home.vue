@@ -2,8 +2,7 @@
   <div class="home">
     <Row class="header" type="flex" align="middle">
       <div class="logo">
-        <img src="../assets/img/logo.png" height="30" alt="">
-        <span>VUE</span>MANAGER <Tag>beta</Tag>
+        <span>工行</span>图像识别系统 <Tag>beta</Tag>
       </div>
       <VmMsgPush style="margin-left:20px" :data="msgPushData"></VmMsgPush>
       <Dropdown class="login-info" placement="bottom-end">
