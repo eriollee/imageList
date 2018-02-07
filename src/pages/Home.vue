@@ -2,19 +2,8 @@
   <div class="home">
     <Row class="header" type="flex" align="middle">
       <div class="logo">
-        <span>工行</span>图像识别系统 <Tag>beta</Tag>
+        <span>工行</span>图像识别系统 
       </div>
-      <VmMsgPush style="margin-left:20px" :data="msgPushData"></VmMsgPush>
-      <Dropdown class="login-info" placement="bottom-end">
-        <Button type="ghost">
-            <img src="../assets/img/photo.jpg" height="30" alt="">Admin
-            <Icon type="arrow-down-b"></Icon>
-        </Button> 
-        <Dropdown-menu slot="list">
-            <Dropdown-item divided><i class="fa fa-key"></i>Log out</Dropdown-item>
-            <Dropdown-item divided><i class="fa fa-cog"></i>Setting</Dropdown-item>
-        </Dropdown-menu>
-      </Dropdown>
     </Row>   
     <div class="sidebar">
       <Menu theme="dark" width="100%" class="menu" :active-name="activeName" :accordion="true">

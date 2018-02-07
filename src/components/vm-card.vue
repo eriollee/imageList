@@ -637,6 +637,8 @@ export default {
 			// 	console.log(~~((actPointH+actCropH)/scale));
 			// 	this.a[1]=~~((actPointH+actCropH)/scale);
 			// }
+			// console.log(img);
+			this.coodinateData.imageName =this.title;
 			this.coodinateData.aX=this.a[0];
 			this.coodinateData.aY=this.a[1];
 			this.coodinateData.bX=this.b[0];

@@ -6,7 +6,7 @@ import router from './router'
 import iView from 'iview'
 import axios from 'axios'
 import '!style-loader!css-loader!less-loader!./theme/index.less'
- 
+// import '@/assets/font-awesome.min.css'/*引入公共样式*/
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios

@@ -1,13 +1,14 @@
 <template>
   <div class="vm-image-list">
     <Row class="image-list-heading vm-panel">
-      <div class="panel-heading">
-        {{ title }}    <Button  type="ghost" v-on:click="handleEdit" >截取信息</Button>
-      </div>
+      <!-- <div class="panel-heading">
+       
+      </div> -->
       <Row type="flex" align="middle" justify="space-between" class="panel-body">
        <div class="search-bar">
           <Input placeholder="Please enter ..." v-model="keyword" style="width: 300px"></Input>
           <Button type="ghost" @click="search"><i class="fa fa-search"></i></Button>
+           <Button  type="ghost" v-on:click="handleEdit" >截取信息</Button>
         </div>
         <Row type="flex" align="middle" class="page">
           <span>Show</span>
@@ -19,7 +20,7 @@
       </Row>
     </Row>
     <Row class="image-list" :gutter="16">
-      <Col :lg="6" :sm="12" class="vm-margin" v-for="item in dataShow" :key="item.id">
+      <Col :lg="4" :sm="6" class="vm-margin" v-for="item in dataShow" :key="item.id">
         <VmCard ref="VmCard"  :message="parentMsg" v-on:listen="listenFromChild" :editable="true" :title="item.title" :img="item.img" :desc="item.desc" :detailUrl="item.detailUrl" :editUrl="item.editUrl" @delete-ok=" deleteOk(item) "></VmCard>
       </Col>
     </Row>
@@ -29,6 +30,7 @@
 <script>
   import VmCard from '@/components/vm-card'
   import XLSX from 'xlsx'
+  import FileSaver from 'file-saver'
   export default {
     name: 'VmImageList',
     components: {
@@ -60,7 +62,7 @@
         parentMsg:'Hello',
         keyword: '', // keyword for search
         dataShow: [], // data for showing
-        showNum: 8, // number of item per page
+        showNum: 12, // number of item per page
         currentPage: 1,
         imgInfo:[], // 图像信息集合
         outputData:[], // 导出的数据
@@ -110,7 +112,10 @@
           
           //  console.log(this.imgInfo);
            for (let i=0;i<this.showNum;i++) {
-              this.imgInfo.push(this.$refs.VmCard[i].sendMsg());
+              if(this.$refs.VmCard[i]!=undefined){
+                  this.imgInfo.push(this.$refs.VmCard[i].sendMsg());
+              }
+              
             }
           this.excelExport();
       },
@@ -223,9 +228,9 @@
         // ))], {
         //   type: ''
 		// })  // 创建二进制对象写入转换好的字节流
-		 saveAs(new Blob([this.s2ab(XLSX.write(tmpWB,
+		 FileSaver.saveAs(new Blob([this.s2ab(XLSX.write(tmpWB,
           {bookType: (type === undefined ? 'xlsx' : type), bookSST: false, type: 'binary'} // 这里的数据是用来定义导出的格式类型
-        ))], {type: "application/octet-stream"}), "1111" + ".xlsx")
+        ))], {type: "application/octet-stream"}), "ImageRec_" +this.currentPage+ ".xlsx")
 
         // var href = URL.createObjectURL(tmpDown)  // 创建对象超链接
         // this.outFile.download = downName + '.xlsx'  // 下载名称
